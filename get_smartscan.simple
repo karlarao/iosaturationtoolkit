@@ -1,0 +1,48 @@
+#!/bin/bash
+
+ps -ef | grep pmon | grep -v grep | grep -v perl | grep -v ASM |\
+while read PMON; do
+   INST=`echo $PMON | awk {' print $8 '} | cut -f3 -d_`
+  echo "instance: $INST"
+
+  export ORACLE_SID=$INST
+  export ORAENV_ASK=NO
+  . oraenv
+
+  sqlplus -s /nolog <<-EOF
+  connect / as sysdba
+
+
+        col start_mb new_value start_mb
+        col end_mb new_value end_mb
+        col instance_name new_value instname
+
+        set echo off
+        set heading off
+        select instance_name from v\$instance;
+
+        select a.value/1024/1024 start_mb from v\$sysstat a
+        where name = 'cell physical IO bytes eligible for predicate offload';
+
+        COLUMN dur NEW_VALUE _dur NOPRINT
+        SELECT 2 dur from dual;
+        exec dbms_lock.sleep(seconds => &_dur);
+
+        select a.value/1024/1024 end_mb from v\$sysstat a
+        where name = 'cell physical IO bytes eligible for predicate offload';
+
+
+        set heading on
+        set verify off
+        set lines 300
+        set colsep ','
+        col inst format a10
+        col MBs format 99999990
+        select a.*, rpad(' '|| rpad ('@',round(a.mbs/100,0), '@'),70,' ') "AWESOME_GRAPH"
+        from (select '%' x, TO_CHAR(SYSDATE,'MM/DD/YY HH24:MI:SS') tm, '&&instname' inst, (&&end_mb - &&start_mb) / &_dur  MBs from dual) a;
+
+EOF
+echo '-----'
+echo
+echo
+done

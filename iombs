@@ -1,0 +1,10 @@
+#!/bin/bash
+
+while :; do
+sqlplus "/ as sysdba" <<-EOF
+--  connect / as sysdba
+@iombs.sql
+EOF
+sleep 5
+echo
+done

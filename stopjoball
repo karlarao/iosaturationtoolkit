@@ -1,0 +1,3 @@
+sh stopawrschedulerjob dbm1
+sh stopawrschedulerjob exadb1
+sh stopawrschedulerjob ACTEST1

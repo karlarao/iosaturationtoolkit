@@ -1,0 +1,15 @@
+  export ORACLE_SID=$1
+  export ORAENV_ASK=NO
+  . oraenv
+
+  sqlplus -s /nolog <<-EOF
+  connect / as sysdba
+
+BEGIN
+    SYS.DBMS_SCHEDULER.DROP_JOB(job_name => '"SYSTEM"."AWR_1MIN_SNAP"',
+                                defer => false,
+                                force => true);
+END;
+/
+
+EOF

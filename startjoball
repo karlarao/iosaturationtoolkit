@@ -1,0 +1,3 @@
+sh startawrschedulerjob dbm1
+sh startawrschedulerjob exadb1
+sh startawrschedulerjob ACTEST1

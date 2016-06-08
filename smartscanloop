@@ -1,0 +1,2 @@
+while : ; do smartscan ; echo "-- host -------- time -------- inst --- smartscan"; sleep 2; done
+#while : ; do smartscan ; echo "-- host -------- time -------- inst ---- aas -- latency -- returned --- ic --- smartscan --"; sleep 2; done

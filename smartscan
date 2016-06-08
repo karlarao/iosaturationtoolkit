@@ -1,0 +1,1 @@
+dcli -l oracle -g ~oracle/dbs_group -x get_smartscan | grep "%"
